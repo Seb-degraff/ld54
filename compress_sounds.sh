@@ -1,10 +1,13 @@
-#./tools/bin/ffmpeg -i assets/ld54/sounds_source/*.wav assets/ld54/sounds_compressed/*.ogg
+#set -e
 
-for fullfile in assets/ld54/sounds_source/*.wav
+# compile qoaconv utility
+clang ../../code/qoaconv.c -std=gnu99 -lm -O3 -o ../../tmp/qoaconv
+
+for fullfile in ./sounds_source/*.wav
 do
-    #./tools/bin/ffmpeg -i assets/ld54/sounds_source/{$file}.wav assets/ld54/sounds_compressed/*.ogg
     filename=$(basename -- "$fullfile")
     extension="${filename##*.}"
     filename="${filename%.*}"
-    yes | ./tools/bin/ffmpeg -i assets/ld54/sounds_source/$filename.wav assets/ld54/sounds_compressed/$filename.ogg
+    yes | ../../tools/ffmpeg/ffmpeg -i ./sounds_source/$filename.wav ./sounds_ogg/$filename.ogg
+    ../../tmp/qoaconv ./sounds_source/$filename.wav ./sounds_qoa/$filename.qoa
 done
